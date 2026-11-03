@@ -1,34 +1,91 @@
 import { useEffect, useState } from 'react'
+import { playNotification } from './notificationSound.js'
 import './App.css'
 
 function App() {
-  const [secondsLeft, setSecondsLeft] = useState(25 * 60)
-  const [isRunning, setIsRunning] = useState(false)
-  const [hasStarted, setHasStarted] = useState(false)
+    const TimerStatus = Object.freeze({
+    PausedWork: 'pausedWork',
+    PausedBreak: 'pausedBreak',
+    ReadyForWork: 'readyForWork',
+    ReadyForBreak: 'readyForBreak',
+    RunningWork: 'runningWork',
+    RunningBreak: 'runningBreak',
+  })
+
+  const totalWorkTime = 3//25 * 60
+  const totalBreakTime = 5//5 * 60
+  const [secondsLeft, setSecondsLeft] = useState(totalWorkTime)
+  const [status, setStatus] = useState(TimerStatus.ReadyForWork)
+  const [startButtonText, setStartButtonText] = useState('Rozpocznij pracę')
 
   const minutes = Math.floor(secondsLeft / 60)
   const seconds = secondsLeft % 60
   const secondsText = String(seconds).padStart(2, '0')
 
-  function handleStart() {
-    if (secondsLeft > 0) {
-      setHasStarted(true)
-      setIsRunning(true)
+  function setupState(){
+     switch (status) {
+        case TimerStatus.PausedWork:
+          setStartButtonText('Wznów pracę')
+          break
+        case TimerStatus.PausedBreak:
+          setStartButtonText('Wznów przerwę')
+          break
+        case TimerStatus.ReadyForWork:
+          setStartButtonText('Rozpocznij pracę')
+          setSecondsLeft(totalWorkTime)
+          break
+        case TimerStatus.ReadyForBreak:
+          setStartButtonText('Rozpocznij przerwę')
+          setSecondsLeft(totalBreakTime)
+          break
+        case TimerStatus.RunningWork:
+          setStartButtonText('Przerwij pracę')
+          break
+        case TimerStatus.RunningBreak:
+          setStartButtonText('Przerwij przerwę')
+          break
+      }
+  }
+
+  function handleTimerButton() {
+    switch (status) {
+      case TimerStatus.ReadyForWork:
+      case TimerStatus.PausedWork:
+        setStatus(TimerStatus.RunningWork);
+        break
+      case TimerStatus.ReadyForBreak:
+      case TimerStatus.PausedBreak:
+        setStatus(TimerStatus.RunningBreak)
+        break
+      case TimerStatus.RunningWork:
+        setStatus(TimerStatus.PausedWork)
+        break
+      case TimerStatus.RunningBreak:
+        setStatus(TimerStatus.PausedBreak)
+        break
     }
   }
 
-  function handlePause() {
-    setIsRunning(false)
+  function handleReset() {
+    setStatus(TimerStatus.ReadyForWork)
   }
 
-  function handleReset() {
-    setIsRunning(false)
-    setSecondsLeft(25 * 60)
-    setHasStarted(false)
-  }
+  useEffect(function logStatus() {
+    setupState()
+  }, [status])
 
   useEffect(function manageTimer() {
-    if (!isRunning || secondsLeft === 0) {
+    switch (status) {
+      case TimerStatus.PausedBreak:
+      case TimerStatus.PausedWork:
+      case TimerStatus.ReadyForBreak:
+      case TimerStatus.ReadyForWork:
+        return
+      default:
+        break
+    }
+
+    if (secondsLeft <= 0) {
       return
     }
 
@@ -36,14 +93,23 @@ function App() {
       setSecondsLeft(secondsLeft - 1)
 
       if (secondsLeft === 1) {
-        setIsRunning(false)
+        if (status === TimerStatus.RunningWork)
+        {
+          playNotification('work')
+          setStatus(TimerStatus.ReadyForBreak)
+        }
+        else
+        {
+          playNotification('break')
+          setStatus(TimerStatus.ReadyForWork)
+        }
       }
     }, 1000)
 
     return function cleanupTimer() {
       clearTimeout(timeoutId)
     }
-  }, [isRunning, secondsLeft])
+  }, [secondsLeft, status])
 
   return (
     <main>
@@ -51,12 +117,8 @@ function App() {
       <p>Sesja skupienia</p>
       <p>{minutes}:{secondsText}</p>
 
-      <button type="button" onClick={handleStart}>
-        {hasStarted ? 'Kontynuuj' : 'Start'}
-      </button>
-
-      <button type="button" onClick={handlePause}>
-        Pauza
+      <button type="button" onClick={handleTimerButton}>
+        {startButtonText}
       </button>
 
       <button type='button' onClick={handleReset}>
