@@ -1,16 +1,24 @@
-# React + Vite
+# Pomodoro Timer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Prosty timer Pomodoro napisany w React. Odmierza 25 minut pracy i 5 minut przerwy, z osobnym sygnałem dźwiękowym po zakończeniu każdej sesji.
 
-Currently, two official plugins are available:
+## Funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Rozpoczynanie, wstrzymywanie i wznawianie odliczania.
+- Przełączanie między pracą a przerwą; każda sesja uruchamiana przyciskiem.
+- Reset do początkowej sesji pracy.
 
-## React Compiler
+## Technologie
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React, JavaScript, CSS, Vite i ESLint. Aplikacja działa w przeglądarce, bez backendu.
 
-## Expanding the ESLint configuration
+## Uruchomienie
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Potrzebne są Node.js 22.12+ i npm. Polecenia wykonuj w katalogu projektu:
+
+```sh
+npm ci
+npm run dev
+```
+
+Otwórz adres pokazany w terminalu. `npm run lint` sprawdza kod, a `npm run build` tworzy wersję produkcyjną w katalogu `dist`.
