@@ -12,11 +12,12 @@ function App() {
     RunningBreak: 'runningBreak',
   })
 
-  const totalWorkTime = 3//25 * 60
-  const totalBreakTime = 5//5 * 60
+  const totalWorkTime = 25 * 60
+  const totalBreakTime = 5 * 60
   const [secondsLeft, setSecondsLeft] = useState(totalWorkTime)
   const [status, setStatus] = useState(TimerStatus.ReadyForWork)
   const [startButtonText, setStartButtonText] = useState('Rozpocznij pracę')
+  const [stateDescription, setStateDesc] = useState('Sesja skupienia')
 
   const minutes = Math.floor(secondsLeft / 60)
   const seconds = secondsLeft % 60
@@ -31,10 +32,12 @@ function App() {
           setStartButtonText('Wznów przerwę')
           break
         case TimerStatus.ReadyForWork:
+          setStateDesc('Sesja skupienia')
           setStartButtonText('Rozpocznij pracę')
           setSecondsLeft(totalWorkTime)
           break
         case TimerStatus.ReadyForBreak:
+          setStateDesc('Przerwa')
           setStartButtonText('Rozpocznij przerwę')
           setSecondsLeft(totalBreakTime)
           break
@@ -114,7 +117,7 @@ function App() {
   return (
     <main>
       <h1>Pomodoro</h1>
-      <p>Sesja skupienia</p>
+      <p>{stateDescription}</p>
       <p>{minutes}:{secondsText}</p>
 
       <button type="button" onClick={handleTimerButton}>
