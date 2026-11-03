@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import TimerDisplay from './components/TimerDisplay.jsx'
+import TimerControls from './components/TimerControls.jsx'
 import { playNotification } from './notificationSound.js'
 import './App.css'
 
@@ -18,10 +20,6 @@ function App() {
   const [status, setStatus] = useState(TimerStatus.ReadyForWork)
   const [startButtonText, setStartButtonText] = useState('Rozpocznij pracę')
   const [stateDescription, setStateDesc] = useState('Sesja skupienia')
-
-  const minutes = Math.floor(secondsLeft / 60)
-  const seconds = secondsLeft % 60
-  const secondsText = String(seconds).padStart(2, '0')
 
   function setupState(){
      switch (status) {
@@ -117,16 +115,15 @@ function App() {
   return (
     <main>
       <h1>Pomodoro</h1>
-      <p>{stateDescription}</p>
-      <p>{minutes}:{secondsText}</p>
-
-      <button type="button" onClick={handleTimerButton}>
-        {startButtonText}
-      </button>
-
-      <button type='button' onClick={handleReset}>
-        Reset
-      </button>
+      <TimerDisplay
+        secondsLeft={secondsLeft}
+        description={stateDescription}
+      />
+      <TimerControls
+        buttonText={startButtonText}
+        onTimerClick={handleTimerButton}
+        onReset={handleReset}
+      />
     </main>
   )
 }
