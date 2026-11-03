@@ -5,8 +5,8 @@ function TimerDisplay(props) {
 
   return (
     <>
-      <p>{props.description}</p>
-      <p>{minutes}:{secondsText}</p>
+      <p className="timer-description">{props.description}</p>
+      <p className="timer-time">{minutes}:{secondsText}</p>
     </>
   )
 }

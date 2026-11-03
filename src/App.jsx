@@ -113,7 +113,7 @@ function App() {
   }, [secondsLeft, status])
 
   return (
-    <main>
+    <main className="pomodoro">
       <h1>Pomodoro</h1>
       <TimerDisplay
         secondsLeft={secondsLeft}

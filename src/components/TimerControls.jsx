@@ -1,11 +1,11 @@
 function TimerControls(props) {
   return (
     <>
-      <button type="button" onClick={props.onTimerClick}>
+      <button className="timer-button" type="button" onClick={props.onTimerClick}>
         {props.buttonText}
       </button>
 
-      <button type="button" onClick={props.onReset}>
+      <button className="timer-button" type="button" onClick={props.onReset}>
         Reset
       </button>
     </>
